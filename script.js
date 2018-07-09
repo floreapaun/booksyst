@@ -66,6 +66,7 @@ $(function() {
   $("ul.list-group").on("click", "button[id$='ChsRoomBttn']", function() {
       console.log("Button has been pressed!");
      
+      $(this).hide(); 
       var BttnId = $(this).attr("id"); 
       var classList = document.getElementById(BttnId).className.split(/\s+/);
       var bk_startdate = classList[classList.length-2];
@@ -73,7 +74,7 @@ $(function() {
       var room_id = BttnId.replace(/[^0-9]/g, '');
 
       $("#step2_form").append("<form class='form-inline'><div id='get_number' class='form-group'></div></form>");
-      $("#get_number").append("<label for='phnumber'>Numar telefon:</label>");
+      $("#get_number").append("<h3><span class='badge badge-info'>Numar telefon </span></h3>");
       $("#get_number").append("<input type='text' class='form-control' id='phnumber' name='phnumber'>");
       $("#get_number").append("<input type='hidden' class='form-control' id='bk_startdate' name='bk_startdate'" +
                              "value='" + bk_startdate + "'>");
@@ -83,10 +84,21 @@ $(function() {
                              "value='" + room_id + "'>");
       
               
-      $("#get_number").append("<button type='button' class='btn btn-primary'id='MakeReservBttn'>Rezerva</button>");
+      $("#get_number").append("<button type='button' class='btn btn-primary' id='MakeReservBttn'>Rezerva</button>");
      
-      $("#step1_form").addClass("hideMe");
-      $("#step2_form").removeClass("hideMe");
+      //$("ul.list-group").hide();
+      $("ul.list-group").children("li").each(function() {
+          console.log($(this));
+          var bttn = $(this).find("button");
+          console.log(bttn);
+          if(bttn.attr("id")!=BttnId) {
+              console.log(bttn.parent());
+             
+              bttn.parent().remove();
+          }
+      });
+
+      //$("#step2_form").removeClass("hideMe");
   });
 
   $("#step2_form").on("click", "#MakeReservBttn", function() 
@@ -107,7 +119,8 @@ $(function() {
           dataType 	: 'json',
           success 	: function(response) 
                       {
-                            $('#step2_form').append('<p>' + response.message + '</p>');
+                            $("#step2_form").append("<div id='resp_mssg'></div>");
+                            $('#resp_mssg').append("<span id='respmssg'>" + response.message + "</span>").hide().fadeIn(2500);
                               console.log(response.message);
                       }
       });

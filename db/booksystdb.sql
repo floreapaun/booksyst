@@ -1,8 +1,8 @@
--- MySQL dump 10.16  Distrib 10.1.33-MariaDB, for Linux (x86_64)
+-- MySQL dump 10.16  Distrib 10.1.34-MariaDB, for Linux (x86_64)
 --
 -- Host: localhost    Database: booksystdb
 -- ------------------------------------------------------
--- Server version	10.1.33-MariaDB
+-- Server version	10.1.34-MariaDB
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -14,6 +14,35 @@
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+--
+-- Table structure for table `reservation`
+--
+
+DROP TABLE IF EXISTS `reservation`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `reservation` (
+  `reserv_id` int(5) NOT NULL AUTO_INCREMENT,
+  `room_id` int(5) DEFAULT NULL,
+  `client_phone` varchar(18) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `start` date DEFAULT NULL,
+  `end` date DEFAULT NULL,
+  PRIMARY KEY (`reserv_id`),
+  KEY `room_id` (`room_id`),
+  CONSTRAINT `reservation_ibfk_1` FOREIGN KEY (`room_id`) REFERENCES `room` (`room_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=42 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `reservation`
+--
+
+LOCK TABLES `reservation` WRITE;
+/*!40000 ALTER TABLE `reservation` DISABLE KEYS */;
+INSERT INTO `reservation` VALUES (1,1,'40721510023','2018-09-01','2018-09-05'),(2,2,'40734245506','2018-05-07','2018-06-09'),(3,1,'40722867115','2018-09-05','2018-09-08'),(4,1,'40728652089','2018-09-15','2018-09-21'),(5,2,'40727405598','2018-06-21','2018-06-30'),(6,7,'0040799342888','2018-09-01','2018-09-05'),(7,13,'004072862089','2018-02-12','2018-02-22'),(8,10,'077923434242','2018-01-29','2018-02-21'),(9,1,'008023434','2018-02-15','2018-02-23'),(10,5,'0040727405598','2018-02-12','2018-02-27'),(11,4,'24343433434','2018-02-19','2018-03-02'),(12,9,'00040234242','2018-02-20','2018-02-23'),(13,3,'00403244234','2018-02-05','2018-02-20'),(14,6,'','2018-02-06','2018-02-08'),(15,11,'0040728652089','2018-02-12','2018-02-28'),(16,5,'sfafsfasfa','2018-03-01','2018-04-26'),(17,7,'0040721510024','2018-02-05','2018-03-01'),(18,9,'0040721510024','2018-03-09','2018-05-04'),(19,2,'0040721510038','2018-02-13','2018-02-16'),(20,2,'004072151038','2018-03-01','2018-04-05'),(21,4,'0040721510099','2018-02-05','2018-02-08'),(22,8,'0040721510096','2018-02-05','2018-02-20'),(23,2,'0040721610023','2018-02-05','2018-02-21'),(24,2,'0040721510123','2018-02-05','2018-02-07'),(25,4,'00407','2018-03-02','2018-04-27'),(26,13,'0040721510034','2018-02-02','2018-02-23'),(27,7,'004072151023','2018-02-23','2018-02-24'),(28,3,'004072151098','2018-02-04','2018-02-06'),(29,10,'0040721510023','2018-01-28','2018-01-30'),(30,11,'0040721510023','2018-01-28','2018-02-21'),(31,13,'0040721510023','2018-02-04','2018-02-06'),(32,14,'0040721510023','2018-01-28','2018-01-30'),(33,4,'0040721510023','2018-01-30','2018-02-14'),(34,4,'0040721510023','2018-01-30','2018-02-14'),(35,4,'0040721510023','2018-01-30','2018-02-14'),(36,4,'0040721510023','2018-01-30','2018-02-14'),(37,3,'0040721510023','2018-02-11','2018-02-27'),(38,5,'0040721510023','2018-02-13','2018-03-02'),(39,4,'0040722868115','2018-02-12','2018-02-15'),(40,6,'0040721510023','2018-02-05','2018-02-28'),(41,14,'0040721510023','2018-02-05','2018-02-21');
+/*!40000 ALTER TABLE `reservation` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `room`
@@ -28,10 +57,7 @@ CREATE TABLE `room` (
   `bath` varchar(8) COLLATE utf8mb4_unicode_ci NOT NULL,
   `ac` int(1) NOT NULL,
   `pet` int(1) DEFAULT NULL,
-  `available` varchar(18) COLLATE utf8mb4_unicode_ci NOT NULL,
   `price` float NOT NULL,
-  `start` date DEFAULT NULL,
-  `end` date DEFAULT NULL,
   PRIMARY KEY (`room_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -42,7 +68,7 @@ CREATE TABLE `room` (
 
 LOCK TABLES `room` WRITE;
 /*!40000 ALTER TABLE `room` DISABLE KEYS */;
-INSERT INTO `room` VALUES (1,1,'public',0,0,'1',70,NULL,NULL),(2,1,'public',0,0,'1',70,NULL,NULL),(3,1,'public',0,0,'1',70,NULL,NULL),(4,1,'public',0,0,'1',70,NULL,NULL),(5,1,'public',0,0,'0040721510023',70,'2018-08-31','2018-09-05'),(6,1,'public',0,0,'1',70,NULL,NULL),(7,1,'private',0,1,'1',120,NULL,NULL),(8,1,'private',0,1,'1',120,NULL,NULL),(9,2,'private',1,1,'1',180,NULL,NULL),(10,2,'private',1,1,'0040734245506',180,'2018-08-30','2018-09-06'),(11,2,'private',1,1,'1',180,NULL,NULL),(12,2,'private',1,1,'1',180,NULL,NULL),(13,3,'public',1,0,'1',350,NULL,NULL),(14,3,'public',1,0,'1',350,NULL,NULL),(15,3,'private',1,0,'1',380,NULL,NULL);
+INSERT INTO `room` VALUES (1,1,'public',0,0,70),(2,1,'public',0,0,70),(3,1,'public',0,0,70),(4,1,'public',0,0,70),(5,1,'public',0,0,70),(6,1,'public',0,0,70),(7,1,'private',0,1,120),(8,1,'private',0,1,120),(9,2,'private',1,1,180),(10,2,'private',1,1,180),(11,2,'private',1,1,180),(12,2,'private',1,1,180),(13,3,'public',1,0,350),(14,3,'public',1,0,350),(15,3,'private',1,0,380);
 /*!40000 ALTER TABLE `room` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -55,4 +81,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-06-26 18:44:50
+-- Dump completed on 2018-07-09 12:27:45

@@ -1,3 +1,25 @@
+h3 {
+    display: inline;
+}
+body {
+    margin-top: 4px;
+}
+
 .hideMe {
     display: none;
 }
+
+.flex-center {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+#roomlist {
+    margin-bottom: 5px;
+}
+
+#respmssg {
+    color: green;
+}
+

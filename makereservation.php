@@ -16,8 +16,7 @@
         $stmt->close();
     }
     
-    $return_arr["message"] = "Rezervare in aprobare. Asteptati sa fiti contactat 
-                              telefonic de adminstrator";
+    $return_arr["message"] = "Rezervare in aprobare. Asteptati sa fiti contactat."; 
     echo json_encode($return_arr);
 ?>
     
