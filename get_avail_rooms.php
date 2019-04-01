@@ -1,9 +1,24 @@
 <?php 
+
+/*
+sistem de recomandare: turism
+site-ul recomanda un apartament din pensiune avand in vedere:
+- daca clientii fumeaza
+- daca sunt cu animale
+- daca sunt cu copii
+- daca prefera frigider
+*/
+
     include("include/dbconfig.php");
     global $mysqli;
     //echo "cats";
     $return_arr = array();
     $room_arr   = array();
+
+    $smokers = $_POST["smokers"];
+    $with_kids = $_POST["with_kids"];
+    $with_fridge = $_POST["with_fridge"];
+    $with_animals = $_POST["with_animals"];
 
     $book_startdate  = $_POST["start"];
     $book_enddate    = $_POST["end"];
@@ -86,6 +101,24 @@
         return $days_cnt;
     }
 
+    function increment(&$count, $p, $b, $f, $k_b)
+    {
+        global $with_animals, $smokers, $with_fridge, $with_kids;
+        if($p && $with_animals)
+            $count++;
+        if($b && $smokers)
+            $count++;
+        if($f && $with_fridge)
+            $count++;
+        if($k_b && $with_kids)
+            $count++;
+    }
+
+    function cmp($a, $b)
+    {
+        return $a["count"] > $b["count"] ? -1 : 1;
+    }        
+
     function form_text(&$type, &$bath, &$ac, &$pet)
     {
         if ($type == 1)
@@ -118,6 +151,7 @@
      
     $inhouse_days = calculate_days();
     //echo "AAAAA: " . $bookstart_month . "<br>";
+    $index = 0;
     for($i=1; $i<=15; $i++) {
  
         //we get all the reservations of the room
@@ -215,28 +249,51 @@
         if($roomIsAvailable) {
             
             $query = "SELECT room_id, type, bath, ac, pet, 
+                      balcony, fridge, kids_bed,
                       price FROM room WHERE room_id=?";
             if($stmt = $mysqli->prepare($query)) {
                 $stmt->bind_param("i", $i);
                 $stmt->execute();
                 $stmt->store_result();
                 $stmt->bind_result($room_id, $type, $bath, $ac, $pet, 
+                                   $balcony, $fridge, $kids_bed,
                                    $price_per_day);
                 $stmt->fetch();
                    
                 //echo $room_id . "XX<br>";
                 //$total_price = 0;
+                $count = 0;
                 $total_price = $price_per_day * $inhouse_days;
                 form_text($type, $bath, $ac, $pet);
                 //echo $type . "<br>" . $bath . "<br>";
-                array_push($room_arr, $room_id, $type, $bath, $ac, $pet,
-                           $price_per_day, $total_price);
+                increment($count, $pet, $balcony, $fridge, $kids_bed);
+
+                $room_arr[$index]["room_id"] = $room_id;
+                $room_arr[$index]["type"] = $type;
+                $room_arr[$index]["bath"] = $bath;
+                $room_arr[$index]["ac"] = $ac;
+                $room_arr[$index]["pet"] = $pet;
+                $room_arr[$index]["price_pday"] = $price_per_day;
+                $room_arr[$index]["totprice"] = $total_price;
+                $room_arr[$index]["count"] = $count;
+                $index++;
                 $stmt->free_result(); 
                 $stmt->close();
             }
         }
     }
+    /*
+    echo "<pre>";
+    print_r($room_arr);
+    echo "</pre>";
+    */
+    usort($room_arr, "cmp");
+    
+    /*
+    echo "<pre>";
+    print_r($room_arr);
+    echo "</pre>";
+    */
 
-    $return_arr["room_arr"] = $room_arr;
-    echo json_encode($return_arr);
+    echo json_encode($room_arr);
 ?> 

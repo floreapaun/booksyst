@@ -25,8 +25,23 @@
             <img src="images/pensionlogo.png">
           </div>
           <div class="col-4 flex-center text-center">
+            <div class="custom-control custom-checkbox">
+                <input type="checkbox" class="custom-control-input" id="smokers">
+                <label class="custom-control-label" for="smokers">fumatori</label>
+            </div>
+            <div class="custom-control custom-checkbox">
+                <input type="checkbox" class="custom-control-input" id="with_kids">
+                <label class="custom-control-label" for="with_kids">cu copii</label>
+            </div>
+            <div class="custom-control custom-checkbox">
+                <input type="checkbox" class="custom-control-input" id="with_fridge">
+                <label class="custom-control-label" for="with_fridge">frigider</label>
+            </div>
+            <div class="custom-control custom-checkbox">
+                <input type="checkbox" class="custom-control-input" id="with_animals">
+                <label class="custom-control-label" for="with_animals">cu animale</label>
+            </div>
             <div>
-              <h3><span class='badge badge-info'>Rezervare </span></h3>
               <input type="text" id="daterange" name="daterange" value="01/01/2018 - 01/15/2018" />
             </div>   
           </div>
@@ -38,8 +53,14 @@
     </div> 
 
    <div id="roomlist" class="d-flex justify-content-center align-items-center container-fluid">
-     <ul class="list-group">
-     </ul>
+     <div id="recom_rooms">
+       <ul class="list-group">
+       </ul>
+     </div>
+     <div id="notrecom_rooms">
+       <ul class="list-group">
+       </ul>
+     </div>
    </div>
       
  

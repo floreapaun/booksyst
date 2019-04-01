@@ -4,60 +4,85 @@ $(function() {
         console.log("A new date selection was made: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
        
          
+        var smokers = 0;
+        var with_kids = 0;
+        var with_fridge = 0;
+        var with_animals = 0;
+        if ($('#smokers').is(":checked"))
+        {
+            smokers = 1; 
+        }
+        if ($('#with_kids').is(":checked"))
+        {
+            with_kids = 1; 
+        }
+        if ($('#with_fridge').is(":checked"))
+        {
+            with_fridge = 1; 
+        }
+        if ($('#with_animals').is(":checked"))
+        {
+            with_animals = 1; 
+        }
+
         $.ajax({
             type    	: 'POST', //method type
             url     	: 'get_avail_rooms.php', //form processing file url
             data        : { "start" : start.format("YYYY-MM-DD"),
-                            "end"   : end.format("YYYY-MM-DD") },
+                            "end"   : end.format("YYYY-MM-DD"),
+                            "smokers" : smokers,
+                            "with_kids" : with_kids,
+                            "with_fridge" : with_fridge,
+                            "with_animals" : with_animals 
+                          },
             dataType 	: 'json',
             success 	: function(response) 
                           {
-                            for(var i=0; i<response.room_arr.length; i=i+7) 
+                            $("#recom_rooms ul.list-group").append("<h3>Recomandam</h3>");
+                            for(var i=0; i<response.length; i++) 
                             {
-                               console.log("ajax response: " + response.room_arr[i]+response.room_arr[i+1]+
+                               /*console.log("ajax response: " + response.room_arr[i]+response.room_arr[i+1]+
                                            response.room_arr[i+2]+response.room_arr[i+3]+
                                            response.room_arr[i+4]+response.room_arr[i+5]+response.room_arr[i+6]);
-                               
+                               */
+                               console.log(response);
                                var petlogo = "";  
-                               if(response.room_arr[i+4])
-                                    petlogo = petlogo + 
-                                             "<img src='images/allowedpet-logo.gif'" +  
+                               if(response[i]["pet"])
+                                    petlogo = "<img src='images/allowedpet-logo.gif'" +  
                                                "title='cu animal de companie'>";
                                else
-                                    petlogo = petlogo + 
-                                              "<img src='images/notallowedpet-logo.gif'" +
+                                    petlogo = "<img src='images/notallowedpet-logo.gif'" +
                                                 "title='fara animal de companie'>";
                                 
                                
                                var roomnumber = "";
-                               if(response.room_arr[i]<10)
-                                    roomnumber = roomnumber + " " + response.room_arr[i];
-                               else
-                                    roomnumber = roomnumber + response.room_arr[i]; 
+                               if(response[i]["room_id"])
+                                    roomnumber = response[i]["room_id"].toString();
                                
                                var roomprice = "";
-                               if(response.room_arr[i+5]<100)
-                                    roomprice = roomprice + " " + response.room_arr[i+5];
-                               else
-                                    roomprice = roomprice + response.room_arr[i+5]; 
+                               roomprice = response[i]["price_pday"].toString();
                                 
                                var aclogo = "";
-                               if(response.room_arr[i+3])
-                                    aclogo = aclogo + "<img src='images/ac-logo.jpg' title='cu aer conditionat'>";
+                               if(response[i]["ac"])
+                                    aclogo = "<img src='images/ac-logo.jpg' title='cu aer conditionat'>";
                                else
-                                    aclogo = aclogo + "<img src='images/noac-logo.jpg' title='fara aer conditionat'>";
+                                    aclogo = "<img src='images/noac-logo.jpg' title='fara aer conditionat'>";
                                     
                                $add = $("<li class='list-group-item d-flex " + 
                                         "justify-content-between align-items-center'>"+
                                         "Apartamentul nr." + roomnumber + ", " + 
-                                         response.room_arr[i+1] +
-                                         ", " + response.room_arr[i+2] + 
+                                         response[i]["type"] +
+                                         ", " + response[i]["bath"] + 
                                          ", " + roomprice + "lei/zi" + aclogo + petlogo +
-                                         "<span class='badge badge-primary badge-pill'>" + response.room_arr[i+6] + 
+                                         "<span class='badge badge-primary badge-pill'>" + response[i]["totprice"] + 
                                          "lei total </span>" + "<button type='button' class='btn btn-primary " +
                                          start.format("YYYY-MM-DD") + " " + end.format("YYYY-MM-DD") + "' id='" + 
-                                         response.room_arr[i] + "_ChsRoomBttn'>Alege</button></li>"); 
-                               $("ul.list-group").append($add);
+                                         roomnumber + "_ChsRoomBttn'>Alege</button></li>"); 
+                               if(response[i]["count"])
+                                    $("#recom_rooms ul.list-group").append($add);
+                               else
+                                    $("#notrecom_rooms ul.list-group").append($add);
+
                             }
                           }
     });
