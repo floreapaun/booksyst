@@ -18,13 +18,17 @@
   </head>
 
   <body>
-    <div class=" container-fluid">
-      <div id="step1_form">
-        <div class="row">
-          <div class="col-4 text-left">
-            <img src="images/pensionlogo.png">
-          </div>
-          <div class="col-4 flex-center text-center">
+    <div class="container-fluid">
+      
+      <!-- pension logo in the left, checkboxes and daterangepicker in the center,
+           facebook logo in the right
+      -->
+      <div class="row">
+        <div class="col-4 text-left">
+          <img src="images/pensionlogo.png">
+        </div>
+        <div class="col-4 flex-center text-center">
+          <div id="step1_form">
             <div class="custom-control custom-checkbox">
                 <input type="checkbox" class="custom-control-input" id="smokers">
                 <label class="custom-control-label" for="smokers">fumatori</label>
@@ -45,40 +49,46 @@
               <input type="text" id="daterange" name="daterange" value="01/01/2018 - 01/15/2018" />
             </div>   
           </div>
-          <div class="col-4 text-right">
-            <img src="images/facebooklogo.png">
-          </div>
         </div>
-      </div> 
+        <div class="col-4 text-right">
+          <img src="images/facebooklogo.png">
+        </div>
+      </div>
+
+      <!-- recommended rooms in the center -->
+      <div class="row">
+        <div class="col-sm-1">
+        </div>
+        <div id="recom_rooms" class="col-sm-10">
+        </div>
+        <div class="col-sm-1">
+        </div>
+      </div>
+
+      <!-- not recommended rooms in the center -->
+      <div class="row">
+        <div class="col-sm-1">
+        </div>
+        <div id="notrecom_rooms" class="col-sm-10">
+        </div>
+        <div class="col-sm-1">
+        </div>
+      </div>
+
+      <!-- the form for submitting booking in the center -->
+      <div class="row">
+        <div class="col-sm-4">
+        </div>
+        <div class="col-sm-4 flex-center text-center" >  
+          <div id="step2_form"> 
+          </div> 
+        </div>
+        <div class="col-sm-4">
+        </div>
+      </div>
+
     </div> 
-
-   <div id="roomlist" class="d-flex justify-content-center align-items-center container-fluid">
-     <div id="recom_rooms">
-       <ul class="list-group">
-       </ul>
-     </div>
-     <div id="notrecom_rooms">
-       <ul class="list-group">
-       </ul>
-     </div>
-   </div>
-      
- 
-   <div class="container-fluid"> 
-     <div class="row">
-       <div class="col-sm-4">
-       </div>
-       <div class="col-sm-4 flex-center text-center" >  
-         <div id="step2_form"> 
-         </div> 
-       </div>
-       <div class="col-sm-4">
-       </div>
-     </div>
-   </div> 
-
-  
-
+    
     <div id="test">
     </div>
 

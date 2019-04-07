@@ -271,6 +271,9 @@ site-ul recomanda un apartament din pensiune avand in vedere:
                 $room_arr[$index]["room_id"] = $room_id;
                 $room_arr[$index]["type"] = $type;
                 $room_arr[$index]["bath"] = $bath;
+                $room_arr[$index]["fridge"] = $fridge;
+                $room_arr[$index]["balcony"] = $balcony;
+                $room_arr[$index]["kids"] = $kids_bed;
                 $room_arr[$index]["ac"] = $ac;
                 $room_arr[$index]["pet"] = $pet;
                 $room_arr[$index]["price_pday"] = $price_per_day;
