@@ -1,24 +1,33 @@
 <?php 
 
-/*
-sistem de recomandare: turism
-site-ul recomanda un apartament din pensiune avand in vedere:
-- daca clientii fumeaza
-- daca sunt cu animale
-- daca sunt cu copii
-- daca prefera frigider
-*/
-
     include("include/dbconfig.php");
     global $mysqli;
-    //echo "cats";
+
     $return_arr = array();
     $room_arr   = array();
+    $room_req = array();
+    $room_stats = array();
 
-    $smokers = $_POST["smokers"];
-    $with_kids = $_POST["with_kids"];
-    $with_fridge = $_POST["with_fridge"];
-    $with_animals = $_POST["with_animals"];
+    //999 means the option was not selected
+    if ($_POST["smokers"])
+        $room_req[0] = 1; 
+    else
+        $room_req[0] = 999;
+
+    if ($_POST["with_kids"])
+        $room_req[1] = 1; 
+    else
+        $room_req[1] = 999;
+
+    if ($_POST["with_fridge"])
+        $room_req[2] = 1; 
+    else
+        $room_req[2] = 999;
+
+    if ($_POST["with_animals"])
+        $room_req[3] = 1; 
+    else
+        $room_req[3] = 999;
 
     $book_startdate  = $_POST["start"];
     $book_enddate    = $_POST["end"];
@@ -31,8 +40,6 @@ site-ul recomanda un apartament din pensiune avand in vedere:
     $bookend_month   = (int)substr($book_enddate, 5, 2);
     $bookend_day     = (int)substr($book_enddate, -2);
   
-    //echo $book_startdate . " " . $book_enddate . "<br>"; 
-    //echo $bookstart_day . " " . $bookend_day . "<br>"; 
     
     function calculate_days()
     {
@@ -97,27 +104,9 @@ site-ul recomanda un apartament din pensiune avand in vedere:
             }
         }
 
-        //echo "zile in cazare: " . $days_cnt . "<br>";
         return $days_cnt;
     }
 
-    function increment(&$count, $p, $b, $f, $k_b)
-    {
-        global $with_animals, $smokers, $with_fridge, $with_kids;
-        if($p && $with_animals)
-            $count++;
-        if($b && $smokers)
-            $count++;
-        if($f && $with_fridge)
-            $count++;
-        if($k_b && $with_kids)
-            $count++;
-    }
-
-    function cmp($a, $b)
-    {
-        return $a["count"] > $b["count"] ? -1 : 1;
-    }        
 
     function form_text(&$type, &$bath, &$ac, &$pet)
     {
@@ -130,18 +119,6 @@ site-ul recomanda un apartament din pensiune avand in vedere:
         else
             $bath = "baie privata";
         
-        /*
-        if($ac)
-            $ac = "cu aer conditionat";
-        else
-            $ac = "fara aer conditionat";
-        */
-        /*
-        if($pet)
-            $pet = "animal companie";
-        else
-            $pet = "fara animal companie";
-        */ 
     }
 
     
@@ -150,14 +127,12 @@ site-ul recomanda un apartament din pensiune avand in vedere:
      //by the client
      
     $inhouse_days = calculate_days();
-    //echo "AAAAA: " . $bookstart_month . "<br>";
     $index = 0;
     for($i=1; $i<=15; $i++) {
  
         //we get all the reservations of the room
         //with id $i
         $query = "SELECT reserv_id, start, end FROM reservation WHERE room_id=?";
-        //echo "i=" . $i . "<br>";
         $roomIsAvailable = false;
         $bookStartExists = false;
         if($stmt = $mysqli->prepare($query)) {
@@ -181,11 +156,6 @@ site-ul recomanda un apartament din pensiune avand in vedere:
                 $rowend_month   = (int)substr($end, 5, 2);
                 $rowend_day     = (int)substr($end, -2);
                 
-                //echo "start row: YYYY - MM - DD : " . $rowstart_year . 
-                  "-" .  $rowstart_month . "-" . $rowstart_day . "<br>"; 
-                //echo "end row: YYYY - MM - DD : " . $rowend_year . "-" . 
-                    $rowend_month ."-" . $rowend_day . "<br>"; 
-                
                 if(!strcmp($book_startdate, $start)) {
                     $bookStartExists = true;
                     $roomIsAvailable = false;
@@ -194,17 +164,14 @@ site-ul recomanda un apartament din pensiune avand in vedere:
 
                 if(!$check) {
                     if($bookstart_year > $rowend_year) {
-                        //echo "\$check got true" . "<br>";
                         $check = true;
                     }
                     if($bookstart_year == $rowend_year) {
                         if($bookstart_month > $rowend_month) {
-                            //echo "\$check got true" . "<br>";
                             $check = true;
                         }
                         if($bookstart_month = $rowend_month) {
                             if($bookstart_day >= $rowend_day) {
-                                //echo "\$check got true" . "<br>";
                                 $check = true;
                             }
                         }
@@ -213,19 +180,16 @@ site-ul recomanda un apartament din pensiune avand in vedere:
                 else {
                     if($rowstart_year > $bookend_year) {
                         $roomIsAvailable = true;
-                        //echo "\$roomIsAvailable got true" . "<br>";
                         break;
                     }
                     if($rowstart_year == $bookend_year) {
                         if($bookend_month < $rowstart_month) {
                             $roomIsAvailable = true;
-                            //echo "\$roomIsAvailable got true" . "<br>";
                             break;
                         }
                         if($bookend_month == $rowstart_month) {
                             if($bookend_day <= $rowstart_day) {   
                                 $roomIsAvailable = true;
-                                //echo "\$roomIsAvailable got true" . "<br>";
                                 break;
                              } 
                         }
@@ -260,13 +224,14 @@ site-ul recomanda un apartament din pensiune avand in vedere:
                                    $price_per_day);
                 $stmt->fetch();
                    
-                //echo $room_id . "XX<br>";
-                //$total_price = 0;
                 $count = 0;
                 $total_price = $price_per_day * $inhouse_days;
                 form_text($type, $bath, $ac, $pet);
-                //echo $type . "<br>" . $bath . "<br>";
-                increment($count, $pet, $balcony, $fridge, $kids_bed);
+
+                $room_stats[0] = $balcony;
+                $room_stats[1] = $kids_bed;
+                $room_stats[2] = $fridge;
+                $room_stats[3] = $pet;
 
                 $room_arr[$index]["room_id"] = $room_id;
                 $room_arr[$index]["type"] = $type;
@@ -278,25 +243,22 @@ site-ul recomanda un apartament din pensiune avand in vedere:
                 $room_arr[$index]["pet"] = $pet;
                 $room_arr[$index]["price_pday"] = $price_per_day;
                 $room_arr[$index]["totprice"] = $total_price;
-                $room_arr[$index]["count"] = $count;
+
+                $recomm = 1;
+                for ($w=0; $w<4; $w++) 
+                    if ($room_req[$w] == 1 && $room_stats[$w] == 0) {
+                        $recomm = 0;
+                        break;
+                    }
+                
+                $room_arr[$index]["recomm"] = $recomm;
+
                 $index++;
                 $stmt->free_result(); 
                 $stmt->close();
             }
         }
     }
-    /*
-    echo "<pre>";
-    print_r($room_arr);
-    echo "</pre>";
-    */
-    usort($room_arr, "cmp");
-    
-    /*
-    echo "<pre>";
-    print_r($room_arr);
-    echo "</pre>";
-    */
 
     echo json_encode($room_arr);
 ?> 

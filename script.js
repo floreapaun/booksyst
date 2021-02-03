@@ -42,12 +42,6 @@ $(function() {
                             //$("#recom_rooms ul.list-group").append("<h3>Recomandam</h3>");
                             for(var i=0; i<response.length; i++) 
                             {
-                               /*console.log("ajax response: " + response.room_arr[i]+response.room_arr[i+1]+
-                                           response.room_arr[i+2]+response.room_arr[i+3]+
-                                           response.room_arr[i+4]+response.room_arr[i+5]+response.room_arr[i+6]);
-                               */
-                               
-                               console.log(response);
 
                                var petlogo = "";  
                                if(response[i]["pet"])
@@ -93,7 +87,6 @@ $(function() {
                                text = "<div class='col-sm-4'>Apartamentul nr." + roomnumber + ", " + 
                                      response[i]["type"] +
                                      ", " + response[i]["bath"] + "</div>"; 
-                                    // ", " + roomprice + "lei/zi</div>";
 
                                var fridge = "";
                                fridge = "<div class='col-sm-1'>" + fridgelogo + "</div>";
@@ -118,8 +111,8 @@ $(function() {
                                             start.format("YYYY-MM-DD") + " " + end.format("YYYY-MM-DD") + "' id='" + 
                                             roomnumber + "_ChsRoomBttn'>Alege</button></div>"
                                
-                                //daca este camera recomandata
-                               if(response[i]["count"]) {
+                                //if room satisfies the client requirements
+                               if(response[i]["recomm"]) {
                                     $("#recom_rooms").append("<div class='row " + i + "row'></div>");
                                     $("#recom_rooms" + " ." + i + "row").append(text);
                                     $("#recom_rooms" + " ." + i + "row").append(fridge);

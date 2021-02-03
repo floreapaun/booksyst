@@ -25,7 +25,7 @@
       -->
       <div class="row">
         <div class="col-4 text-left">
-          <img src="images/pensionlogo.png">
+          <a href=''><img src="images/pensionlogo.png"></a>
         </div>
         <div class="col-4 flex-center text-center">
           <div id="step1_form">
@@ -46,7 +46,7 @@
                 <label class="custom-control-label" for="with_animals">cu animale</label>
             </div>
             <div>
-              <input type="text" id="daterange" name="daterange" value="01/01/2018 - 01/15/2018" />
+              <input type="text" id="daterange" name="daterange" value="01/01/2021 - 01/15/2021" />
             </div>   
           </div>
         </div>
